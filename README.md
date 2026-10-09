@@ -74,6 +74,13 @@ npm run dev
 
 Ouvrir http://localhost:3000, se connecter avec le mot de passe provisoire affiché, puis le changer. Sacha peut ensuite être ajouté depuis **Paramètres > Équipe**.
 
+### 5. Mise en ligne sur Vercel
+1. Sur [vercel.com](https://vercel.com), importer le dépôt GitHub `ls-studio-app` (framework détecté : Next.js).
+2. Renseigner les variables d'environnement de `.env.example` (avec l'adresse Vercel dans `NEXT_PUBLIC_SITE_URL`).
+3. Déployer, puis ajouter l'adresse du site dans la règle CORS de R2 et dans *Site URL* / *Redirect URLs* de Supabase.
+
+Les fonctions tournent à Francfort (`vercel.json`), au plus près de la base Supabase.
+
 ## Commandes
 
 | Commande | Rôle |
