@@ -1,5 +1,10 @@
 [build]
   command = "npm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Module Next.js de Netlify : publie les pages serveur, les routes API et le proxy.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
