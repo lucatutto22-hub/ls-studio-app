@@ -41,7 +41,7 @@ Les règles d'accès sont dans la base (Row Level Security) : même en cas d'err
 5. Récupérer l'URL du projet, la clé publiable et la clé secrète (**Project Settings > API Keys**).
 
 ### 2. Cloudflare R2
-1. Créer un bucket `ls-studio-fichiers` (gratuit jusqu'à 10 Go).
+1. Créer un bucket (celui de LS Studio s'appelle `ls-studio`, gratuit jusqu'à 10 Go) et reporter son nom exact dans `R2_BUCKET`.
 2. Créer un jeton d'API R2 avec les droits *Object Read & Write* sur ce bucket.
 3. Dans les paramètres du bucket, ajouter cette règle CORS (remplacer l'adresse du site) :
 
