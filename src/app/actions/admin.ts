@@ -70,19 +70,31 @@ async function createAccount(
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { error: "Adresse e-mail invalide." };
   const password = tempPassword();
   const admin = createAdminClient();
-  const { error } = await admin.auth.admin.createUser({
+  const { data, error } = await admin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
     app_metadata: { role, client_id: clientId ?? "" },
     user_metadata: { full_name: fullName },
   });
-  if (error) {
+  if (error || !data.user) {
+    console.error("createUser", error);
     return {
-      error: /already|registered|exists/i.test(error.message)
+      error: error && /already|registered|exists/i.test(error.message)
         ? "Un compte existe déjà avec cette adresse."
-        : "Impossible de créer le compte.",
+        : `Impossible de créer le compte${error ? ` (${error.message})` : ""}.`,
     };
+  }
+  // Supabase enregistre app_metadata après l'insertion : le déclencheur crée donc le profil
+  // avec le rôle « client » par défaut. On fixe ici le rôle et le client rattaché.
+  const { error: profileError } = await admin
+    .from("profiles")
+    .update({ role, client_id: clientId, full_name: fullName || null })
+    .eq("id", data.user.id);
+  if (profileError) {
+    console.error("profiles.update", profileError);
+    await admin.auth.admin.deleteUser(data.user.id);
+    return { error: "Impossible d'enregistrer le rôle du compte." };
   }
   await sendMail({
     to: [email],
